@@ -15,29 +15,76 @@ namespace magicWorld
     {
         public Image spriteHero;
 
+        public Entity hero;
+
         public Form1()
         {
             InitializeComponent();
-            Size = new Size(960, 540);
+            Size = new Size(96*15, 54*15);
+
+            timer1.Interval = 25;
+            timer1.Tick += new EventHandler(Update);
+            KeyUp += new KeyEventHandler(OnKeyUp);
+
+            KeyDown += new KeyEventHandler(OnPress);
+            
             Init();
         }
+
+        public void OnKeyUp(object sender, KeyEventArgs e)
+        {
+            hero.dX = 0;
+            hero.dY = 0;
+            hero.isMoving = false;
+        }
+
+        public void OnPress(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.W:
+                    hero.dY = -3;
+                    break;
+                case Keys.A:
+                    if (hero.direction == 1)
+                        hero.sprite.RotateFlip(RotateFlipType.Rotate180FlipY);
+                    hero.direction = -1;
+                    hero.dX = -3;
+                    break;
+                case Keys.S:
+                    hero.dY = 3;
+                    break;
+                case Keys.D:
+                    if (hero.direction == -1)
+                        hero.sprite.RotateFlip(RotateFlipType.Rotate180FlipY);
+                    hero.direction = 1;
+                    hero.dX = 3;
+                    break;
+            }
+            hero.isMoving = true;
+        }
+
+        public void Update(object sender, EventArgs e)
+        {
+            if (hero.isMoving)
+                hero.Move();
+            Invalidate();
+        }
+  
 
         void Init()
         {
             spriteHero = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(), "Sprites\\Wizard.png"));
-
-            var player = new Entity(0, 0, spriteHero);
-
+            hero = new Entity(50, 50, spriteHero);
+            
             Paint += OnPaint;
-            Invalidate();
+            timer1.Start();
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
         {
             var graphics = e.Graphics;
-
-            graphics.DrawImage(spriteHero, new Point(100, 100));
-
+            graphics.DrawImage(hero.sprite, hero.posX, hero.posY);
         }
     }
 

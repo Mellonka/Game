@@ -12,8 +12,12 @@ namespace magicWorld
     {
         public int posX;
         public int posY;
+        public int dX;
+        public int dY;
+        public bool isMoving;
+        public int direction = 1;
 
-        private Image sprite;
+        public Image sprite;
 
         public Entity(int posX, int posY, Image sprite)
         {
@@ -23,7 +27,7 @@ namespace magicWorld
 
         }
 
-        public void Move(int dX, int dY)
+        public void Move()
         {
             posX += dX;
             posY += dY;
