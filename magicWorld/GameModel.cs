@@ -8,6 +8,8 @@ namespace magicWorld
 {
     class GameModel
     {
+        Form1 view; 
+
         public GameModel()
         {
 

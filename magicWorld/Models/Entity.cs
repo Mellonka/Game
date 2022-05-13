@@ -10,27 +10,49 @@ namespace magicWorld
 {
     public class Entity
     {
-        public int posX;
-        public int posY;
-        public int dX;
-        public int dY;
+        public int PosX;
+        public int PosY;
+        public int Dx;
+        public int Dy;
         public bool isMoving;
-        public int direction = 1;
+        public int currentFrame;
+        public int currentAnimation;
+        public int runFrames;
+        public Size Size { get; set; }
 
-        public Image sprite;
+        public int Direction = 1;
+        public Image SpriteSheet;
 
-        public Entity(int posX, int posY, Image sprite)
+        public Entity(int posX, int posY, Image spriteSheet)
         {
-            this.posX = posX;
-            this.posY = posY;
-            this.sprite = sprite;
+            PosX = posX;
+            PosY = posY;
+            SpriteSheet = spriteSheet;
+            Size = new Size(33 * 3, 40 * 3);
+            currentFrame = 0;
+            currentAnimation = 0;
+            runFrames = 4;
 
+        }
+        
+        public void PlayAnimation(Graphics graphics)
+        {
+            SetAnimation();
+            graphics.DrawImage(SpriteSheet, PosX, PosY, new Rectangle(new Point(currentAnimation * 33 * 3, 0), Size), GraphicsUnit.Pixel);
+        }
+        
+        private void SetAnimation()
+        {
+            if (isMoving && currentAnimation < 3)
+                currentAnimation++;
+            else
+                currentAnimation = 0;
         }
 
         public void Move()
         {
-            posX += dX;
-            posY += dY;
+            PosX += Dx;
+            PosY += Dy;
         }
 
     }
