@@ -72,7 +72,7 @@ namespace magicWorld
 
         void Init()
         {
-            spriteHero = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(), "Sprites\\движение1(типа).png"));
+            spriteHero = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(), "Sprites\\гг.png"));
             player = new Entity(50, 50, spriteHero);
             Paint += OnPaint;
             timer1.Start();
