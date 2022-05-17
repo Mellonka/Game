@@ -15,7 +15,7 @@ namespace magicWorld
     {
         public Image spriteHero;
         public Entity player;
-
+        private Map map;
         #region
         private Timer timer1;
         #endregion
@@ -24,10 +24,9 @@ namespace magicWorld
         public Form1()
         {
             InitializeComponent();
-            Size = new Size(96*15, 54*15);
+            Size = new Size(96 * 15, 54 * 15);
             timer1 = new Timer();
             timer1.Interval = 40;
-
             timer1.Tick += new EventHandler(Update);
             KeyUp += new KeyEventHandler(OnKeyUp);
             KeyDown += new KeyEventHandler(OnPress);
@@ -46,21 +45,28 @@ namespace magicWorld
             switch (e.KeyCode)
             {
                 case Keys.W:
-                    player.Dy = -3;
+                    player.Dy = -5;
+                    player.isMoving = true;
+
                     break;
                 case Keys.A:
                     player.Direction = -1;
-                    player.Dx = -3;
+                    player.Dx = -5;
+                    player.isMoving = true;
+
                     break;
                 case Keys.S:
-                    player.Dy = 3;
+                    player.Dy = 5;
+                    player.isMoving = true;
+
                     break;
                 case Keys.D:
                     player.Direction = 1;
-                    player.Dx = 3;
+                    player.Dx = 5;
+                    player.isMoving = true;
                     break;
             }
-            player.isMoving = true;
+            
         }
 
         public void Update(object sender, EventArgs e)
@@ -72,7 +78,11 @@ namespace magicWorld
 
         void Init()
         {
-            spriteHero = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(), "Sprites\\гг.png"));
+            spriteHero = new Bitmap(Path.Combine(
+                new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(), "Sprites\\гг.png"));
+            map = new Map();
+            Width = (map.Width) * 48;
+            Height = (map.Height + 1) * 47;
             player = new Entity(50, 50, spriteHero);
             Paint += OnPaint;
             timer1.Start();
@@ -81,6 +91,7 @@ namespace magicWorld
         private void OnPaint(object sender, PaintEventArgs e)
         {
             var graphics = e.Graphics;
+            map.DrawMap(graphics);
             player.PlayAnimation(graphics);
         }
     }

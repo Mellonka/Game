@@ -31,7 +31,7 @@ namespace magicWorld
         {
             this.SuspendLayout();
             // 
-            // View
+            // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -39,7 +39,10 @@ namespace magicWorld
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.DoubleBuffered = true;
-            this.Name = "View";
+            this.Location = new System.Drawing.Point(50, 0);
+            this.Name = "Form1";
+            this.RightToLeftLayout = true;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.ResumeLayout(false);
 

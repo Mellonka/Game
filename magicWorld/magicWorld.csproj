@@ -48,7 +48,10 @@
   <ItemGroup>
     <Compile Include="Creatures\Hero.cs" />
     <Compile Include="GameModel.cs" />
+    <Compile Include="Level.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="Models\Entity.cs" />
+    <Compile Include="SetLevels.cs" />
     <Compile Include="View.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Sprites\Wizard.png" />
+    <Content Include="Sprites\карта.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

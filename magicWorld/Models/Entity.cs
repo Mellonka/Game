@@ -38,12 +38,14 @@ namespace magicWorld
         public void PlayAnimation(Graphics graphics)
         {
             SetAnimation();
-            graphics.DrawImage(SpriteSheet, PosX, PosY, new Rectangle(new Point(currentAnimation * 33 * 3, 43*3), Size), GraphicsUnit.Pixel);
+            graphics.DrawImage(SpriteSheet, PosX, PosY, 
+                new Rectangle(new Point(currentAnimation * 33 * 3, 43*3), Size), 
+                GraphicsUnit.Pixel);
         }
         
         private void SetAnimation()
         {
-            if (isMoving && currentAnimation < 2)
+            if (isMoving && currentAnimation < 3)
                 currentAnimation++;
             else
                 currentAnimation = 0;
