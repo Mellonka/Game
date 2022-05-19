@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace magicWorld
+namespace MagicWorld
 {
-    class SetLevels
+    interface ISpell
     {
-
-
+        void PlayAnimation();
+        void SetAnimation();
 
     }
 }

@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace magicWorld
+namespace MagicWorld
 {
     class GameModel
     {
-        Form1 view; 
-
         public GameModel()
         {
 

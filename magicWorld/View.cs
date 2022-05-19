@@ -9,28 +9,44 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace magicWorld
+namespace MagicWorld
 {
     public partial class Form1 : Form
     {
         public Image spriteHero;
         public Entity player;
-        private Map map;
-        #region
-        private Timer timer1;
-        #endregion
-
+        public static Map map;
 
         public Form1()
         {
             InitializeComponent();
-            Size = new Size(96 * 15, 54 * 15);
-            timer1 = new Timer();
             timer1.Interval = 40;
             timer1.Tick += new EventHandler(Update);
+            timer1.Start();
             KeyUp += new KeyEventHandler(OnKeyUp);
             KeyDown += new KeyEventHandler(OnPress);
+            Paint += OnPaint;
+            MouseClick += att;
             Init();
+        }
+
+        Fireball Spell;
+        private void att(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Spell = new Fireball(e.Location, player.Location);
+            }
+        }
+
+        void Init()
+        {
+            map = new Map(MapsInfo.Map1);
+            spriteHero = new Bitmap(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString() + "\\Sprites\\гг.png");
+            Width = map.Width * MapsInfo.CellSize.Width;
+            Height = (map.Height + 1) * MapsInfo.CellSize.Height;
+            player = new Hero(new Point(50, 50), spriteHero, new Size(33 * 3, 43 * 3), 9, 3, 2);
+            
         }
 
         public void OnKeyUp(object sender, KeyEventArgs e)
@@ -47,52 +63,44 @@ namespace magicWorld
                 case Keys.W:
                     player.Dy = -5;
                     player.isMoving = true;
-
                     break;
+
                 case Keys.A:
-                    player.Direction = -1;
                     player.Dx = -5;
                     player.isMoving = true;
-
                     break;
+
                 case Keys.S:
                     player.Dy = 5;
                     player.isMoving = true;
-
                     break;
+
                 case Keys.D:
-                    player.Direction = 1;
                     player.Dx = 5;
                     player.isMoving = true;
                     break;
             }
-            
         }
 
         public void Update(object sender, EventArgs e)
         {
             if (player.isMoving)
                 player.Move();
+            if (Spell != null)
+                Spell.Move();
             Invalidate();
         }
 
-        void Init()
-        {
-            spriteHero = new Bitmap(Path.Combine(
-                new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(), "Sprites\\гг.png"));
-            map = new Map();
-            Width = (map.Width) * 48;
-            Height = (map.Height + 1) * 47;
-            player = new Entity(50, 50, spriteHero);
-            Paint += OnPaint;
-            timer1.Start();
-        }
 
         private void OnPaint(object sender, PaintEventArgs e)
         {
-            var graphics = e.Graphics;
-            map.DrawMap(graphics);
-            player.PlayAnimation(graphics);
+            var g = e.Graphics;
+            map.DrawMap(g);
+            
+            player.PlayAnimation(g);
+
+            if (Spell != null)
+                Spell.PlayAnimation(g);
         }
     }
 }
