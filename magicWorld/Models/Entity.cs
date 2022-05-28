@@ -8,11 +8,9 @@ using System.Drawing;
 
 namespace MagicWorld
 {
-    public class Entity 
+    public abstract class Entity : IEntity
     {
         public float HP;
-        public float MP;
-        
 
         public Point Location;
         public int Dx;
@@ -21,70 +19,58 @@ namespace MagicWorld
         public bool isAttacking;
         public bool isDead;
 
-
         public int currentAnimation;
         public int currentFrame;
-
-        public int runAnimations;
-        public int attackAnimations;
-        public int stayAnimations;
-        public Fireball currentSpell;
+        public int RunAnimations { get; set; }
+        public int AttackAnimations { get; set; }
+        public int StayAnimations { get; set; }
         public Size Size { get; set; }
+        public Image SpriteSheet { get; set; }
+        
 
-        public Image SpriteSheet;
-
-        public Entity(Point location, Image spriteSheet, Size size,
-            int stayAnimations, int runAnimations, int attackAnimations)
+        public Entity(int posX, int PosY)
         {
-            SpriteSheet = spriteSheet;
-            Size = size;
-            Location = location;
+            Location = new Point(posX, PosY);
 
-            currentFrame = 0;
+            currentFrame = 1;
             currentAnimation = 0;
-
-            this.stayAnimations = stayAnimations;
-            this.runAnimations = runAnimations;
-            this.attackAnimations = attackAnimations;
         }
 
-        public virtual void Attack(Fireball spell)
+        public virtual void Attack()
         {
-            currentSpell = spell;
+            throw new NotImplementedException();
             
-
-
         }
 
         public void PlayAnimation(Graphics g)
         {
             SetAnimation();
             g.DrawImage(SpriteSheet, Location.X, Location.Y,
-                new Rectangle(new Point(currentAnimation * Size.Width, currentFrame * Size.Height), Size),
-                GraphicsUnit.Pixel);
+                new Rectangle(new Point(currentAnimation * Size.Width, -currentFrame * Size.Height), Size),
+                GraphicsUnit.Pixel) ;
         }
 
         public void SetAnimation()
         {
-            if (!isMoving && !isAttacking && currentAnimation < stayAnimations )
+            if (!isMoving && !isAttacking && currentAnimation < StayAnimations )
             {
                 currentAnimation++;
-                currentFrame = 0;
-            }            
-            else if (isMoving && currentAnimation < runAnimations)
-            {
                 currentFrame = 1;
-                currentAnimation++;
-            }
-            else if (isAttacking && currentAnimation < attackAnimations)
+            }            
+            else if (isMoving && currentAnimation < RunAnimations)
             {
                 currentFrame = 2;
+                currentAnimation++;
+            }
+            else if (isAttacking && currentAnimation < AttackAnimations)
+            {
+                currentFrame = 3;
                 currentAnimation++;
             }
             else if (isDead)
             {
                 currentAnimation = 1;
-                currentFrame = 4;
+                currentFrame = 5;
             }                
             else
             {

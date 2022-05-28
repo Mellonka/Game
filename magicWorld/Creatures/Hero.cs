@@ -9,13 +9,21 @@ namespace MagicWorld
 {
     public class Hero : Entity
     {
-        public Hero(Point location, Image spriteSheet, Size size, int stayAnimations, int runAnimations, int attackAnimations)    
-                                : base(location, spriteSheet, size, stayAnimations, runAnimations, attackAnimations)
-        { }
-
-        public override void Attack(Fireball spell)
+        float mp;
+        public Hero(int posX, int posY) : base(posX, posY)
         {
-            base.Attack(spell);
+            RunAnimations = EntityInfo.RunAnimationsHero;
+            AttackAnimations = EntityInfo.AttackAnimationsHero;
+            StayAnimations = EntityInfo.StayAnimationsHero;
+            SpriteSheet = EntityInfo.SpriteSheetHero;
+            Size = EntityInfo.SizeHero;
+            HP = EntityInfo.HPHero;
+            mp = EntityInfo.MPHero;
+        }
+
+        public override void Attack()
+        {
+            base.Attack();
         }
     }
 }

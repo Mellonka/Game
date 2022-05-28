@@ -16,7 +16,9 @@ namespace MagicWorld
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            var game = new GameModel();
+            Application.Run(new View(game));
         }
+
     }
 }

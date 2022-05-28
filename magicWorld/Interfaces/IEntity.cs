@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace MagicWorld
 {
-    interface ISpell
+    public interface IEntity : IAnimation
     {
-        void PlayAnimation();
-        void SetAnimation();
+        void Move();
+        void Attack();
 
     }
 }

@@ -11,7 +11,7 @@ namespace MagicWorld
     public class Map
     {
 
-        int[,] map;
+        readonly int[,] map;
 
         public readonly int Width;
         public readonly int Height;
