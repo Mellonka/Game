@@ -10,7 +10,7 @@ namespace MagicWorld
 {
     public static class MapsInfo
     {
-        public static readonly Size CellSize = new Size(48, 48);
+        public static readonly int CellSize = 48;
 
         public static readonly Image SpriteSheet = new Bitmap(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString() + "\\Sprites\\Map.png");
 

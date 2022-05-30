@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,40 +12,51 @@ namespace MagicWorld
     public class GameModel
     {
         readonly List<IEnemy> enemies;
-        readonly List<ISpell> activeSpells;
+        public readonly List<ISpell> activeSpells;
         Point spawnPoint;
 
-        public Controls Controls;
+        public Icon Icon;
+
+        public Controller Controller;
         public Timer TimerSpawn;
         public Timer TimerMove;
         public Hero Player;
         public Map Map;
 
-
         public GameModel()
         {
-            TimerSpawn = new Timer { Interval = 5000 };
+            TimerSpawn = new Timer { Interval = 8000 };
             TimerSpawn.Tick += SpawnEnemy;
 
             TimerMove = new Timer { Interval = 40 };
             TimerMove.Tick += MovePlayer;
             TimerMove.Tick += MoveEnemies;
+            TimerMove.Tick += MoveSpells;
+
 
             enemies = new List<IEnemy>();
             activeSpells = new List<ISpell>();
 
 
-            Controls = new Controls(this);
-            Player = new Hero(150, 200);
+            Controller = new Controller(this);
+            Player = new Hero(150, 210);
             Map = new Map(MapsInfo.Map1);
 
-            Init();
+            Icon = new Icon(Map.Width, Map.Height);
+            
         }
+
         public void Start(Point spawnPoint)
         {
             this.spawnPoint = spawnPoint;
             TimerMove.Start();
             TimerSpawn.Start();
+        }
+
+        public void AddSpell(Elements element)
+        {
+            Player.Attack(element);
+            activeSpells.Add(Player.currentSpell);
         }
 
         public void OnPaint(object sender, PaintEventArgs e)
@@ -56,27 +68,44 @@ namespace MagicWorld
                 enemy.PlayAnimation(g);
             foreach (var spell in activeSpells)
                 spell.PlayAnimation(g);
-        }
 
+
+            g.DrawImage(Icon.SpriteSheet, Icon.Location.X, Icon.Location.Y,
+                new Rectangle(new Point(Icon.Size.Width * (int)Icon.currentElement, 0), Icon.Size), GraphicsUnit.Pixel);
+        }
+        private void MoveSpells(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                foreach (var spell in activeSpells)
+                {
+                    lock (spell)
+                    {
+                        spell.Move();
+                    }
+                }
+            });
+        }
 
         private void MoveEnemies(object sender, EventArgs e)
         {
-            foreach (var enemy in enemies)
+            Task.Run(() =>
             {
-                enemy.FindPlayer(Player.Location);
-                enemy.Move();
-            }
+                foreach (var enemy in enemies)
+                {
+                    enemy.FindPlayer(Player.Location);
+                    lock (enemy)
+                    {
+                        enemy.Move();
+                    }
+                }
+            });
         }
 
         private void MovePlayer(object sender, EventArgs e)
         {
             if (Player.isMoving)
                 Player.Move();
-        }
-
-        void Init()
-        {
-
         }
 
         private void SpawnEnemy(object sender, EventArgs e)

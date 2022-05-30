@@ -13,27 +13,27 @@ namespace MagicWorld
     public partial class View : Form
     {
         readonly GameModel game;
-        readonly Controls controls;
+        readonly Controller controller;
         
         public View(GameModel game)
         {
             InitializeComponent();
             this.game = game;
-            controls = game.Controls;
+            controller = game.Controller;
             game.TimerMove.Tick += (s, e) => Invalidate();
 
-            KeyUp += controls.OnKeyUp;
-            KeyDown += controls.OnPress;
+            KeyUp += controller.OnKeyUp;
+            KeyDown += controller.OnPress;
             Paint += game.OnPaint;
+            MouseDown += controller.MouseDown;
+            MouseUp += controller.MouseUp; 
 
-            Init();
+            Width = game.Map.Width * MapsInfo.CellSize;
+            Height = (game.Map.Height + 1) * MapsInfo.CellSize;
+
+            game.Start(new Point((Width + 50) - ((Width + 50) % 3), (Height / 2) - (Height / 2 % 3)));
         }
 
-        void Init()
-        {
-            Width = game.Map.Width * MapsInfo.CellSize.Width;
-            Height = (game.Map.Height + 1) * MapsInfo.CellSize.Height;
-            game.Start(new Point(Width + 50, Height / 2));
-        }
+        
     }
 }

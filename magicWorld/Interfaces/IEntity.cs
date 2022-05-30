@@ -10,6 +10,5 @@ namespace MagicWorld
     {
         void Move();
         void Attack();
-
     }
 }

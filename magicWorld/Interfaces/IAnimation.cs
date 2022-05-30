@@ -9,14 +9,11 @@ namespace MagicWorld
 {
     public interface IAnimation
     {
-        int RunAnimations { get; set; }
-        int AttackAnimations { get; set; }
-        int StayAnimations{ get; set; }
-        Size Size { get; set; }
-        Image SpriteSheet{ get; set; }
+        Image SpriteSheet { get; set; }
 
         void SetAnimation();
 
+        void Move();
         void PlayAnimation(Graphics g);
 }
 }

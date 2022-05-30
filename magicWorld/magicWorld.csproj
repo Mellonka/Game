@@ -62,8 +62,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls.cs" />
-    <Compile Include="EntityInfo.cs" />
+    <Compile Include="Elements.cs" />
+    <Compile Include="Icon.cs" />
+    <Compile Include="MVC\Controller.cs" />
+    <Compile Include="Info`s\EntityInfo.cs" />
     <Compile Include="Creatures\Hero.cs" />
     <Compile Include="Creatures\Mannequin.cs" />
     <Compile Include="Creatures\Slime.cs" />
@@ -72,25 +74,24 @@
     <Compile Include="Interfaces\IAnimation.cs" />
     <Compile Include="Interfaces\IEnemy.cs" />
     <Compile Include="Interfaces\ISpell.cs" />
-    <Compile Include="GameModel.cs" />
+    <Compile Include="MVC\GameModel.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Models\Entity.cs" />
-    <Compile Include="MapsInfo.cs" />
+    <Compile Include="Info`s\MapsInfo.cs" />
     <Compile Include="Models\Spell.cs" />
     <Compile Include="Spells\StoneBullet.cs" />
     <Compile Include="Spells\Waterball.cs" />
     <Compile Include="Spells\WindBlade.cs" />
-    <Compile Include="Vector.cs" />
-    <Compile Include="View.cs">
+    <Compile Include="MVC\View.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View.Designer.cs">
+    <Compile Include="MVC\View.Designer.cs">
       <DependentUpon>View.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="View.resx">
+    <EmbeddedResource Include="MVC\View.resx">
       <DependentUpon>View.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

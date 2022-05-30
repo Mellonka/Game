@@ -13,8 +13,23 @@ namespace MagicWorld
         public static float Damage = 100;
 
 
-        public Fireball(Point location, Point target)
-            : base(location, target) { }
+        public Fireball(Point location) : base(location) 
+        {
+            SpriteSheet = new Bitmap(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString() + "\\Sprites\\огонь.png");
+            Size = new Size(13*3, 18*3);
+            heightSprite = 48 * 3;
+            PreparingAnimations = 2;
+            FlyingAnimations = 2;
+            ExploreAnimations = 3;
+        }
+
+        public override void SetSize()
+        {
+            if (currentFrame == 1)
+                Size = new Size(24 * 3, 17 * 3);
+            else if (currentFrame == 2)
+                Size = new Size(48 * 3, 48 * 3);
+        }
 
         public override void Explore()
         {
