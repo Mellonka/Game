@@ -10,9 +10,6 @@ namespace MagicWorld
 {
     public class Fireball : Spell
     {
-        public static float Damage = 100;
-
-
         public Fireball(Point location) : base(location) 
         {
             SpriteSheet = new Bitmap(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString() + "\\Sprites\\огонь.png");
@@ -21,6 +18,10 @@ namespace MagicWorld
             PreparingAnimations = 2;
             FlyingAnimations = 2;
             ExploreAnimations = 3;
+            Damage = 35;
+            speed = 25;
+            Cost = 60;
+            element = Elements.Fire;
         }
 
         public override void SetSize()
@@ -34,6 +35,7 @@ namespace MagicWorld
         public override void Explore()
         {
             base.Explore();
+            SetSize();
         }
     }
 }

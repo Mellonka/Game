@@ -14,7 +14,7 @@ namespace MagicWorld
     {
         readonly GameModel game;
         readonly Controller controller;
-        
+
         public View(GameModel game)
         {
             InitializeComponent();
@@ -26,14 +26,13 @@ namespace MagicWorld
             KeyDown += controller.OnPress;
             Paint += game.OnPaint;
             MouseDown += controller.MouseDown;
-            MouseUp += controller.MouseUp; 
+            MouseUp += controller.MouseUp;
 
             Width = game.Map.Width * MapsInfo.CellSize;
             Height = (game.Map.Height + 1) * MapsInfo.CellSize;
 
-            game.Start(new Point((Width + 50) - ((Width + 50) % 3), (Height / 2) - (Height / 2 % 3)));
+            game.Start();
         }
 
-        
     }
 }

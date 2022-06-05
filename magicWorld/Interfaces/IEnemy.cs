@@ -9,11 +9,9 @@ namespace MagicWorld
 {
     public interface IEnemy : IEntity
     {
-
         void FindPlayer(Point playerLocation);
 
-
-
+        bool HitTarget(Spell spell, int dx, int dy);
 
     }
 }

@@ -15,6 +15,7 @@ namespace MagicWorld
         public Elements currentElement = 0;
         public static Size Size = new Size(210, 210);
         public static Point Location;
+        public static Rectangle Rectangle;
         public Icon(int width, int height)
         {
             Location = new Point(width * MapsInfo.CellSize - Size.Width - 30, height * MapsInfo.CellSize - Size.Height - 10);

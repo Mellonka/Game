@@ -8,7 +8,9 @@ namespace MagicWorld
 {
     public interface IEntity : IAnimation
     {
-        void Move();
-        void Attack();
+        //void Move();
+        //void Attack();
+        bool isDead { get;  }
+        
     }
 }

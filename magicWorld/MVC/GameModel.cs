@@ -11,91 +11,165 @@ namespace MagicWorld
 {
     public class GameModel
     {
-        readonly List<IEnemy> enemies;
-        public readonly List<ISpell> activeSpells;
-        Point spawnPoint;
+        readonly List<Enemy> enemies;
+        public readonly List<Spell> activeSpells;
 
         public Icon Icon;
-
+        readonly int widthForm;
+        readonly int heightForm;
         public Controller Controller;
         public Timer TimerSpawn;
         public Timer TimerMove;
+        public Timer TimerClearEnemies;
+        public Timer TimerClearSpells;
+        public Castle Castle;
+
         public Hero Player;
         public Map Map;
 
         public GameModel()
         {
-            TimerSpawn = new Timer { Interval = 8000 };
+            TimerSpawn = new Timer { Interval = 3000 };
             TimerSpawn.Tick += SpawnEnemy;
 
-            TimerMove = new Timer { Interval = 40 };
+            TimerMove = new Timer { Interval = 20 };
             TimerMove.Tick += MovePlayer;
             TimerMove.Tick += MoveEnemies;
-            TimerMove.Tick += MoveSpells;
+            TimerMove.Tick += MoveAndHitSpells;
 
+            TimerClearEnemies = new Timer { Interval = 3000 };
+            TimerClearEnemies.Tick += ClearEnemies;
 
-            enemies = new List<IEnemy>();
-            activeSpells = new List<ISpell>();
+            TimerClearSpells = new Timer { Interval = 500 };
+            TimerClearSpells.Tick += ClearSpells;
 
+            enemies = new List<Enemy>();
+            activeSpells = new List<Spell>();
 
             Controller = new Controller(this);
-            Player = new Hero(150, 210);
+            Player = new Hero(65, 490);
             Map = new Map(MapsInfo.Map1);
-
+            Castle = new Castle();
+            widthForm = MapsInfo.CellSize * Map.Width;
+            heightForm = MapsInfo.CellSize * Map.Height;
             Icon = new Icon(Map.Width, Map.Height);
-            
         }
 
-        public void Start(Point spawnPoint)
+        public void Start()
         {
-            this.spawnPoint = spawnPoint;
             TimerMove.Start();
             TimerSpawn.Start();
+            TimerClearEnemies.Start();
+            TimerClearSpells.Start();
+        }
+
+        private void ClearSpells(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                for (var i = 0; i < activeSpells.Count; i++)
+                {
+                    var spell = activeSpells[i];
+                    if (spell.Location.X > widthForm || spell.Location.X < 0 || spell.Location.Y > heightForm || spell.Location.Y < 0
+                        || spell.isExplore)
+                    {
+                        lock (activeSpells)
+                        {
+                            activeSpells.RemoveAt(i);
+                        }
+                        i--;
+                    }
+                }
+            });
+        }
+
+        private void ClearEnemies(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    var enemy = enemies[i];
+
+                    if (enemy.IsDead)
+                    {
+                        lock (enemies)
+                        {
+                            enemies.RemoveAt(i);
+                        }
+                        i--;
+                    }
+
+                }
+            });
         }
 
         public void AddSpell(Elements element)
         {
             Player.Attack(element);
-            activeSpells.Add(Player.currentSpell);
+            if (Player.currentSpell != null)
+                activeSpells.Add(Player.currentSpell);
         }
 
         public void OnPaint(object sender, PaintEventArgs e)
         {
             var g = e.Graphics;
             Map.DrawMap(g);
+            Castle.OnPaint(g);
             Player.PlayAnimation(g);
             foreach (var enemy in enemies)
                 enemy.PlayAnimation(g);
             foreach (var spell in activeSpells)
                 spell.PlayAnimation(g);
-
-
             g.DrawImage(Icon.SpriteSheet, Icon.Location.X, Icon.Location.Y,
                 new Rectangle(new Point(Icon.Size.Width * (int)Icon.currentElement, 0), Icon.Size), GraphicsUnit.Pixel);
         }
-        private void MoveSpells(object sender, EventArgs e)
+
+        private void MoveAndHitSpells(object sender, EventArgs e)
         {
             Task.Run(() =>
             {
-                foreach (var spell in activeSpells)
+                lock (activeSpells)
                 {
-                    lock (spell)
+                    foreach (var spell in activeSpells)
                     {
-                        spell.Move();
+                        if (spell.isExplore && (spell.element == Elements.Earth || spell.element == Elements.Water))
+                            continue;
+                        foreach (var enemy in enemies)
+                        {
+                            if (!enemy.IsDead && enemy.HitTarget(spell))
+                            {
+                                if (!spell.isExplore)
+                                    spell.Explore();
+                                lock (enemy)
+                                {
+                                    if (spell.element == Elements.Water)
+                                        enemy.Move(spell.Dx * 3, spell.Dy * 3);
+                                    enemy.TakeDamage(spell.Damage);
+                                }
+                                if (spell.element == Elements.Earth)
+                                    break;
+                            }
+                        }
+                        if (!spell.isExplore)
+                            spell.Move();
                     }
                 }
             });
         }
 
+        void EnemyAttackCastle(int damage) => Castle.TakeDamage(damage);
+        void EnemyAttackPlayer(int damage) => Player.TakeDamage(damage);
+
         private void MoveEnemies(object sender, EventArgs e)
         {
             Task.Run(() =>
             {
-                foreach (var enemy in enemies)
+                lock (enemies)
                 {
-                    enemy.FindPlayer(Player.Location);
-                    lock (enemy)
+                    foreach (var enemy in enemies)
                     {
+                        enemy.FindPlayerAndCastle(Player.Location, Castle.Location.X, Castle.Size.Width);
                         enemy.Move();
                     }
                 }
@@ -104,14 +178,46 @@ namespace MagicWorld
 
         private void MovePlayer(object sender, EventArgs e)
         {
-            if (Player.isMoving)
-                Player.Move();
+            Task.Run(() =>
+            {
+                lock (Player)
+                {
+                    if (Player.IsMoving)
+                        Player.Move();
+                }
+            });
         }
 
         private void SpawnEnemy(object sender, EventArgs e)
         {
-            var enemy = new Slime(spawnPoint.X, spawnPoint.Y);
-            enemies.Add(enemy);
+            Task.Run(() =>
+            {
+                lock (enemies)
+                {
+                    var random = new Random();
+                    for (var i = 0; i < 2; i++)
+                    {
+                        var enemy = new Slime(widthForm + 50, random.Next(100, 950));
+                        enemy.AttackingPlayer += EnemyAttackPlayer;
+                        enemy.AttackingCastle += EnemyAttackCastle;
+                        enemies.Add(enemy);
+                    }
+                    if (random.Next() % 8 == 0)
+                    {
+                        var enemy1 = new Slime(random.Next(700) + 500, -5);
+                        enemy1.AttackingPlayer += EnemyAttackPlayer;
+                        enemy1.AttackingCastle += EnemyAttackCastle;
+                        enemies.Add(enemy1);
+                    }
+                    if (random.Next() % 8 == 0)
+                    {
+                        var enemy2 = new Slime(random.Next(700) + 500, heightForm + 5);
+                        enemy2.AttackingPlayer += EnemyAttackPlayer;
+                        enemy2.AttackingCastle += EnemyAttackCastle;
+                        enemies.Add(enemy2);
+                    }
+                }
+            });
         }
     }
 }

@@ -4,13 +4,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace MagicWorld
 {
-    public class Slime : Entity, IEnemy
+    public class Slime : Enemy
     {
-        public float Damage;
-        
         public Slime(int posX, int posY) : base(posX, posY)
         {
             RunAnimations = EntityInfo.RunAnimationsSlime;
@@ -19,30 +19,10 @@ namespace MagicWorld
             Size = EntityInfo.SizeSlime;
             Damage = EntityInfo.DamageSlime;
             SpriteSheet = EntityInfo.SpriteSheetSlime;
-            HP = EntityInfo.HPSlime;
-
-        }
-
-
-        public override void Attack()
-        {
-            base.Attack();
-        }
-
-        public void FindPlayer(Point playerLocation)
-        {
-            var difX = playerLocation.X - Location.X;
-            var difY = playerLocation.Y - Location.Y;
-            if (difX == 0 && difY == 0)
-            {
-                isMoving = false;
-            }
-            else
-            {
-                Dx = difX > 0 ? 3 : difX == 0 ? 0 : -3;
-                Dy = difY > 0 ? 3 : difY == 0 ? 0 : -3;
-                isMoving = true;
-            }
+            TakeDamageAnimations = EntityInfo.TakeDamageAnimationsSlime;
+            var random = new Random();
+            Speed = random.Next(2,8);
+            healthBar = new HealthBar(random.Next(200, 600), Size.Width - 30, 10, new Point(Location.X, Location.Y + Size.Height - 12));
         }
     }
 }

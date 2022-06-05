@@ -10,7 +10,6 @@ namespace MagicWorld
 {
     public class Waterball : Spell
     {
-        public static float Damage = 100;
 
 
         public Waterball(Point location) : base(location) 
@@ -21,7 +20,11 @@ namespace MagicWorld
 
             PreparingAnimations = 1;
             FlyingAnimations = 1;
-            ExploreAnimations = 2;
+            ExploreAnimations = 4;
+            Damage = 190;
+            speed = 20;
+            element = Elements.Water;
+            Cost = 50;
         }
 
         public override void SetSize()
@@ -40,6 +43,7 @@ namespace MagicWorld
         public override void Explore()
         {
             base.Explore();
+            SetSize();
         }
     }
 }

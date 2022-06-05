@@ -10,10 +10,8 @@ namespace MagicWorld
     public interface IAnimation
     {
         Image SpriteSheet { get; set; }
-
         void SetAnimation();
-
         void Move();
         void PlayAnimation(Graphics g);
-}
+    }
 }

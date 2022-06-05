@@ -8,5 +8,14 @@ namespace MagicWorld
 {
     public class Level
     {
+        public Map Map;
+        public Hero Player;
+
+        public Level()
+        {
+
+        }
+
+
     }
 }

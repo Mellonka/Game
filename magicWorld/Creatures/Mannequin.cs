@@ -7,25 +7,18 @@ using System.Threading.Tasks;
 
 namespace MagicWorld
 {
-    public class Mannequin : Entity, IEnemy
+    public class Mannequin : Enemy
     {
-
-
-
         public Mannequin(int posX, int posY) : base(posX, posY)
         {
             RunAnimations = EntityInfo.RunAnimationsMannequin;
             AttackAnimations = EntityInfo.AttackAnimationsMannequin;
             StayAnimations = EntityInfo.StayAnimationsMannequin;
             SpriteSheet = EntityInfo.SpriteSheetMannequin;
-            HP = EntityInfo.HPMannequin;
             Size = EntityInfo.SizeMannequin;
-        }
+            Speed = 0;
 
-        public void FindPlayer(Point playerLocation)
-        {
-
-            throw new NotImplementedException();
+            healthBar = new HealthBar(EntityInfo.HPMannequin, Size.Width - 30, 10, new Point(posX + 15, posY + Size.Height - 16));
         }
     }
 }

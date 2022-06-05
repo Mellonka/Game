@@ -21,8 +21,7 @@ namespace MagicWorld
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    game.Player.Attack(game.Icon.currentElement);
-                    game.activeSpells.Add(game.Player.currentSpell);
+                    game.AddSpell(game.Icon.currentElement);
                     break;
             }
         }
@@ -42,20 +41,20 @@ namespace MagicWorld
             switch (e.KeyCode)
             {
                 case Keys.W:
-                    game.Player.Dy = -6;
-                    game.Player.isMoving = true;
+                    game.Player.Dy = -8;
+                    game.Player.IsMoving = true;
                     break;
                 case Keys.A:
-                    game.Player.Dx = -6;
-                    game.Player.isMoving = true;
+                    game.Player.Dx = -8;
+                    game.Player.IsMoving = true;
                     break;
                 case Keys.S:
-                    game.Player.Dy = 6;
-                    game.Player.isMoving = true;
+                    game.Player.Dy = 8;
+                    game.Player.IsMoving = true;
                     break;
                 case Keys.D:
-                    game.Player.Dx = 6;
-                    game.Player.isMoving = true;
+                    game.Player.Dx = 8;
+                    game.Player.IsMoving = true;
                     break;
                 case Keys.D1:
                     game.Icon.ChangeElement(0);
@@ -76,7 +75,7 @@ namespace MagicWorld
         {
             game.Player.Dx = 0;
             game.Player.Dy = 0;
-            game.Player.isMoving = false;
+            game.Player.IsMoving = false;
         }
 
     }

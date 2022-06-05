@@ -14,7 +14,7 @@ namespace MagicWorld
 
         public static readonly Image SpriteSheet = new Bitmap(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString() + "\\Sprites\\Map.png");
 
-        public static readonly Dictionary<int, Rectangle> Elements = new Dictionary<int, Rectangle>
+        public static readonly Dictionary<int, Rectangle> MapObjects = new Dictionary<int, Rectangle>
         {
             {0, new Rectangle(new Point(32*3, 48*3), new Size(16*3, 16*3)) },
             {1, new Rectangle(new Point(32*3, 32*3), new Size(16*3, 16*3)) },

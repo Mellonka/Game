@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace MagicWorld
 {
-    public class Spell : ISpell
+    public class Spell
     {
         public bool isPreparing;
-        bool isExplore;
+        public bool isExplore;
 
-        int Dx;
-        int Dy;
+        public int Damage;
+        public float Cost;
+
+        public int Dx;
+        public int Dy;
         public Image SpriteSheet { get; set; }
         public Size Size { get; set; }
         public int heightSprite;
@@ -26,8 +29,9 @@ namespace MagicWorld
         public int PreparingAnimations;
         public int FlyingAnimations { get; set; }
         public int ExploreAnimations { get; set; }
+        public Elements element;
 
-
+        internal int speed;
         public Spell(Point location)
         {
             Location = new Point(location.X + 120, location.Y - 140);
@@ -50,40 +54,46 @@ namespace MagicWorld
             var difY = target.Y - Location.Y;
             var norma = Math.Sqrt(difY * difY + difX * difX);
 
-            Dx = difX * 20 / (int)Math.Round(norma);
-            Dy = difY * 20 / (int)Math.Round(norma);
+            Dx = difX * speed / (int)Math.Round(norma);
+            Dy = difY * speed / (int)Math.Round(norma);
         }
 
         public virtual void SetSize() { }
 
-        public void Move() 
-        { 
-            Location.X += Dx;
-            Location.Y += Dy;
+        public void Move()
+        {
+            if (!isExplore)
+            {
+                Location.X += Dx;
+                Location.Y += Dy;
+            }
         }
 
         public virtual void Explore()
         {
-
+            isExplore = true;
+            currentAnimation = 0;
+            currentFrame++;
         }
 
         public void PlayAnimation(Graphics g)
         {
             SetAnimation();
 
-            g.DrawImage(SpriteSheet, Location.X, Location.Y, 
-                new Rectangle(new Point(Size.Width * currentAnimation, currentFrame * heightSprite), Size),
-                GraphicsUnit.Pixel);
+            g.DrawImage(SpriteSheet, Location.X, Location.Y,
+                new Rectangle(new Point(Size.Width * currentAnimation, currentFrame * heightSprite), Size), GraphicsUnit.Pixel);
         }
 
         public void SetAnimation()
         {
             if (isPreparing && currentAnimation < PreparingAnimations)
                 currentAnimation++;
-            else if (!isExplore && currentAnimation < FlyingAnimations)
+            else if (!isExplore && !isPreparing && currentAnimation < FlyingAnimations)
                 currentAnimation++;
             else if (isExplore && currentAnimation < ExploreAnimations)
                 currentAnimation++;
+            else if (isExplore && currentAnimation == ExploreAnimations)
+                return;
             else
                 currentAnimation = 0;
         }
