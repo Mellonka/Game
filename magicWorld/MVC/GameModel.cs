@@ -177,8 +177,7 @@ namespace MagicWorld
         private void SpawnEnemy(object sender, EventArgs e)
         {
 
-            lock (enemies)
-            {
+            
                 var random = new Random();
                 for (var i = 0; i < 2; i++)
                 {
@@ -201,7 +200,7 @@ namespace MagicWorld
                     enemy2.AttackingCastle += EnemyAttackCastle;
                     enemies.Add(enemy2);
                 }
-            }
+            
 
         }
     }
