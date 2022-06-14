@@ -67,6 +67,7 @@ namespace MagicWorld
         {
             Task.Run(() =>
             {
+
                 for (var i = 0; i < activeSpells.Count; i++)
                 {
                     var spell = activeSpells[i];
@@ -75,6 +76,7 @@ namespace MagicWorld
                     {
                         lock (activeSpells)
                         {
+
                             activeSpells.RemoveAt(i);
                         }
                         i--;
@@ -85,23 +87,24 @@ namespace MagicWorld
 
         private void ClearEnemies(object sender, EventArgs e)
         {
-            Task.Run(() =>
-            {
+            /*Task.Run(() =>
+            {*/
+
                 for (int i = 0; i < enemies.Count; i++)
                 {
                     var enemy = enemies[i];
 
                     if (enemy.IsDead)
                     {
-                        lock (enemies)
-                        {
+                        /*lock (enemies)
+                        {*/
                             enemies.RemoveAt(i);
-                        }
+                        /*}*/
                         i--;
                     }
 
                 }
-            });
+           /* });*/
         }
 
         public void AddSpell(Elements element)
