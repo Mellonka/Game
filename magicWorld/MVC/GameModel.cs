@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -65,43 +65,39 @@ namespace MagicWorld
 
         private void ClearSpells(object sender, EventArgs e)
         {
-            Task.Run(() =>
+
+
+            for (var i = 0; i < activeSpells.Count; i++)
             {
-                for (var i = 0; i < activeSpells.Count; i++)
+                var spell = activeSpells[i];
+                if (spell.Location.X > widthForm || spell.Location.X < 0 || spell.Location.Y > heightForm || spell.Location.Y < 0
+                    || spell.isExplore)
                 {
-                    var spell = activeSpells[i];
-                    if (spell.Location.X > widthForm || spell.Location.X < 0 || spell.Location.Y > heightForm || spell.Location.Y < 0
-                        || spell.isExplore)
-                    {
-                        lock (activeSpells)
-                        {
-                            activeSpells.RemoveAt(i);
-                        }
-                        i--;
-                    }
+
+
+                    activeSpells.RemoveAt(i);
+
+                    i--;
                 }
-            });
+            }
+
         }
 
         private void ClearEnemies(object sender, EventArgs e)
         {
-            Task.Run(() =>
+
+            for (int i = 0; i < enemies.Count; i++)
             {
-                for (int i = 0; i < enemies.Count; i++)
+                var enemy = enemies[i];
+
+                if (enemy.IsDead)
                 {
-                    var enemy = enemies[i];
 
-                    if (enemy.IsDead)
-                    {
-                        lock (enemies)
-                        {
-                            enemies.RemoveAt(i);
-                        }
-                        i--;
-                    }
-
+                    enemies.RemoveAt(i);
+                    i--;
                 }
-            });
+
+            }
         }
 
         public void AddSpell(Elements element)
@@ -127,35 +123,30 @@ namespace MagicWorld
 
         private void MoveAndHitSpells(object sender, EventArgs e)
         {
-            Task.Run(() =>
+
+            foreach (var spell in activeSpells)
             {
-                lock (activeSpells)
+                if (spell.isExplore && (spell.element == Elements.Earth || spell.element == Elements.Water))
+                    continue;
+                foreach (var enemy in enemies)
                 {
-                    foreach (var spell in activeSpells)
+                    if (!enemy.IsDead && enemy.HitTarget(spell))
                     {
-                        if (spell.isExplore && (spell.element == Elements.Earth || spell.element == Elements.Water))
-                            continue;
-                        foreach (var enemy in enemies)
-                        {
-                            if (!enemy.IsDead && enemy.HitTarget(spell))
-                            {
-                                if (!spell.isExplore)
-                                    spell.Explore();
-                                lock (enemy)
-                                {
-                                    if (spell.element == Elements.Water)
-                                        enemy.Move(spell.Dx * 3, spell.Dy * 3);
-                                    enemy.TakeDamage(spell.Damage);
-                                }
-                                if (spell.element == Elements.Earth)
-                                    break;
-                            }
-                        }
                         if (!spell.isExplore)
-                            spell.Move();
+                            spell.Explore();
+
+                        if (spell.element == Elements.Water)
+                            enemy.Move(spell.Dx * 3, spell.Dy * 3);
+                        enemy.TakeDamage(spell.Damage);
+
+                        if (spell.element == Elements.Earth)
+                            break;
                     }
                 }
-            });
+                if (!spell.isExplore)
+                    spell.Move();
+            }
+
         }
 
         void EnemyAttackCastle(int damage) => Castle.TakeDamage(damage);
@@ -163,61 +154,55 @@ namespace MagicWorld
 
         private void MoveEnemies(object sender, EventArgs e)
         {
-            Task.Run(() =>
+
+
+            foreach (var enemy in enemies)
             {
-                lock (enemies)
-                {
-                    foreach (var enemy in enemies)
-                    {
-                        enemy.FindPlayerAndCastle(Player.Location, Castle.Location.X, Castle.Size.Width);
-                        enemy.Move();
-                    }
-                }
-            });
+                enemy.FindPlayerAndCastle(Player.Location, Castle.Location.X, Castle.Size.Width);
+                enemy.Move();
+            }
+
+
         }
 
         private void MovePlayer(object sender, EventArgs e)
         {
-            Task.Run(() =>
-            {
-                lock (Player)
-                {
-                    if (Player.IsMoving)
-                        Player.Move();
-                }
-            });
+
+            if (Player.IsMoving)
+                Player.Move();
+
+
         }
 
         private void SpawnEnemy(object sender, EventArgs e)
         {
-            Task.Run(() =>
+
+            lock (enemies)
             {
-                lock (enemies)
+                var random = new Random();
+                for (var i = 0; i < 2; i++)
                 {
-                    var random = new Random();
-                    for (var i = 0; i < 2; i++)
-                    {
-                        var enemy = new Slime(widthForm + 50, random.Next(100, 950));
-                        enemy.AttackingPlayer += EnemyAttackPlayer;
-                        enemy.AttackingCastle += EnemyAttackCastle;
-                        enemies.Add(enemy);
-                    }
-                    if (random.Next() % 8 == 0)
-                    {
-                        var enemy1 = new Slime(random.Next(700) + 500, -5);
-                        enemy1.AttackingPlayer += EnemyAttackPlayer;
-                        enemy1.AttackingCastle += EnemyAttackCastle;
-                        enemies.Add(enemy1);
-                    }
-                    if (random.Next() % 8 == 0)
-                    {
-                        var enemy2 = new Slime(random.Next(700) + 500, heightForm + 5);
-                        enemy2.AttackingPlayer += EnemyAttackPlayer;
-                        enemy2.AttackingCastle += EnemyAttackCastle;
-                        enemies.Add(enemy2);
-                    }
+                    var enemy = new Slime(widthForm + 50, random.Next(100, 950));
+                    enemy.AttackingPlayer += EnemyAttackPlayer;
+                    enemy.AttackingCastle += EnemyAttackCastle;
+                    enemies.Add(enemy);
                 }
-            });
+                if (random.Next() % 8 == 0)
+                {
+                    var enemy1 = new Slime(random.Next(700) + 500, -5);
+                    enemy1.AttackingPlayer += EnemyAttackPlayer;
+                    enemy1.AttackingCastle += EnemyAttackCastle;
+                    enemies.Add(enemy1);
+                }
+                if (random.Next() % 8 == 0)
+                {
+                    var enemy2 = new Slime(random.Next(700) + 500, heightForm + 5);
+                    enemy2.AttackingPlayer += EnemyAttackPlayer;
+                    enemy2.AttackingCastle += EnemyAttackCastle;
+                    enemies.Add(enemy2);
+                }
+            }
+
         }
     }
 }
