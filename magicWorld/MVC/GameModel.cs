@@ -61,24 +61,12 @@ namespace MagicWorld
 
         private void ClearSpells(object sender, EventArgs e)
         {
-
-
             for (var i = 0; i < activeSpells.Count; i++)
             {
                 var spell = activeSpells[i];
                 if (spell.Location.X > widthForm || spell.Location.X < 0 || spell.Location.Y > heightForm || spell.Location.Y < 0
                     || spell.isExplore)
                 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
-=======
-
-
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
                     activeSpells.RemoveAt(i);
 
                     i--;
@@ -96,25 +84,9 @@ namespace MagicWorld
 
                 if (enemy.IsDead)
                 {
-<<<<<<< HEAD
-<<<<<<< HEAD
                     enemies.RemoveAt(i);
                     i--;
                 }
-=======
-
-                    enemies.RemoveAt(i);
-                    i--;
-                }
-
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
-=======
-
-                    enemies.RemoveAt(i);
-                    i--;
-                }
-
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
             }
         }
 
@@ -141,7 +113,6 @@ namespace MagicWorld
 
         private void MoveAndHitSpells(object sender, EventArgs e)
         {
-
             foreach (var spell in activeSpells)
             {
                 if (spell.isExplore && (spell.element == Elements.Earth || spell.element == Elements.Water))
@@ -164,7 +135,6 @@ namespace MagicWorld
                 if (!spell.isExplore)
                     spell.Move();
             }
-
         }
 
         void EnemyAttackCastle(int damage) => Castle.TakeDamage(damage);
@@ -172,57 +142,21 @@ namespace MagicWorld
 
         private void MoveEnemies(object sender, EventArgs e)
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
-=======
-
-
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
             foreach (var enemy in enemies)
             {
-                enemy.FindPlayerAndCastle(Player.Location, Castle.Location.X, Castle.Size.Width);
+                enemy.FindPlayerOrCastle(Player.Location, Castle.Location.X, Castle.Size.Width);
                 enemy.Move();
             }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
-=======
-
-
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
         }
 
         private void MovePlayer(object sender, EventArgs e)
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
             if (Player.IsMoving)
                 Player.Move();
-=======
-=======
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
-
-            if (Player.IsMoving)
-                Player.Move();
-
-
-<<<<<<< HEAD
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
-=======
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
         }
 
         private void SpawnEnemy(object sender, EventArgs e)
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
             var random = new Random();
             for (var i = 0; i < 2; i++)
             {
@@ -245,39 +179,6 @@ namespace MagicWorld
                 enemy2.AttackingCastle += EnemyAttackCastle;
                 enemies.Add(enemy2);
             }
-=======
-=======
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
-
-            
-                var random = new Random();
-                for (var i = 0; i < 2; i++)
-                {
-                    var enemy = new Slime(widthForm + 50, random.Next(100, 950));
-                    enemy.AttackingPlayer += EnemyAttackPlayer;
-                    enemy.AttackingCastle += EnemyAttackCastle;
-                    enemies.Add(enemy);
-                }
-                if (random.Next() % 8 == 0)
-                {
-                    var enemy1 = new Slime(random.Next(700) + 500, -5);
-                    enemy1.AttackingPlayer += EnemyAttackPlayer;
-                    enemy1.AttackingCastle += EnemyAttackCastle;
-                    enemies.Add(enemy1);
-                }
-                if (random.Next() % 8 == 0)
-                {
-                    var enemy2 = new Slime(random.Next(700) + 500, heightForm + 5);
-                    enemy2.AttackingPlayer += EnemyAttackPlayer;
-                    enemy2.AttackingCastle += EnemyAttackCastle;
-                    enemies.Add(enemy2);
-                }
-            
-
-<<<<<<< HEAD
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
-=======
->>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
         }
     }
 }

@@ -35,7 +35,7 @@ namespace MagicWorld
             }
         }
 
-        public void FindPlayerAndCastle(Point playerLocation, int castlePosX, int castleWidth)
+        public void FindPlayerOrCastle(Point playerLocation, int castlePosX, int castleWidth)
         {
             IsAttacking = false;
             if (Speed == 0)
