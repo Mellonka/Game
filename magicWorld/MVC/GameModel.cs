@@ -70,6 +70,11 @@ namespace MagicWorld
                     || spell.isExplore)
                 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
 =======
 
 
@@ -92,9 +97,17 @@ namespace MagicWorld
                 if (enemy.IsDead)
                 {
 <<<<<<< HEAD
+<<<<<<< HEAD
                     enemies.RemoveAt(i);
                     i--;
                 }
+=======
+
+                    enemies.RemoveAt(i);
+                    i--;
+                }
+
+>>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
 =======
 
                     enemies.RemoveAt(i);
@@ -160,6 +173,11 @@ namespace MagicWorld
         private void MoveEnemies(object sender, EventArgs e)
         {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
 =======
 
 
@@ -170,6 +188,11 @@ namespace MagicWorld
                 enemy.Move();
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
 =======
 
 
@@ -179,19 +202,26 @@ namespace MagicWorld
         private void MovePlayer(object sender, EventArgs e)
         {
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (Player.IsMoving)
                 Player.Move();
 =======
+=======
+>>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
 
             if (Player.IsMoving)
                 Player.Move();
 
 
+<<<<<<< HEAD
+>>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
+=======
 >>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
         }
 
         private void SpawnEnemy(object sender, EventArgs e)
         {
+<<<<<<< HEAD
 <<<<<<< HEAD
             var random = new Random();
             for (var i = 0; i < 2; i++)
@@ -216,6 +246,8 @@ namespace MagicWorld
                 enemies.Add(enemy2);
             }
 =======
+=======
+>>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
 
             
                 var random = new Random();
@@ -242,6 +274,9 @@ namespace MagicWorld
                 }
             
 
+<<<<<<< HEAD
+>>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
+=======
 >>>>>>> 8702c6314ff890b42914d1054ff0f4b6f4547038
         }
     }
