@@ -15,6 +15,7 @@ namespace MagicWorld
         readonly GameModel game;
         readonly Controller controller;
 
+
         public View(GameModel game)
         {
             InitializeComponent();
@@ -28,8 +29,14 @@ namespace MagicWorld
             MouseDown += controller.MouseDown;
             MouseUp += controller.MouseUp;
 
-            Width = game.Map.Width * MapsInfo.CellSize;
-            Height = (game.Map.Height + 1) * MapsInfo.CellSize;
+            FormClosed += (s, e) =>
+            {
+                game.gameOver.Close();
+                GC.Collect();
+                Owner.Show();
+            };
+
+            ClientSize = new Size(game.Map.Width * MapsInfo.CellSize, game.Map.Height * MapsInfo.CellSize);
 
             game.Start();
         }

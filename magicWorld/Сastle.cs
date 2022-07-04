@@ -21,7 +21,7 @@ namespace MagicWorld
         {
             SpriteSheet = new Bitmap(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString() + "\\Sprites\\стена.png");
             Location = new Point(-100, -6);
-            HealthBar = new HealthBar(5000, 700, 30, new Point(400,20));
+            HealthBar = new HealthBar(50000000000, 700, 30, new Point(400,20));
             Size = new Size(47 * 6, 183 * 6);
             Rectangle = new Rectangle(new Point(0, 0), Size);
             isDestruct = false;

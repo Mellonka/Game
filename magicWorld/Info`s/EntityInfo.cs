@@ -27,7 +27,7 @@ namespace MagicWorld
         public static int StayAnimationsHero = 9;
         public static Size SizeHero = new Size(111, -129);
         public static Image SpriteSheetHero = new Bitmap(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString() + "\\Sprites\\гг.png");
-        public static float HPHero = 1500;
+        public static float HPHero = 100;
         public static float MPHero = 4000;
         public static int TakeDamageAnimationsHero = 4;
 

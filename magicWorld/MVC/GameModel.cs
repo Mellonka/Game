@@ -5,11 +5,11 @@ using System.Windows.Forms;
 
 namespace MagicWorld
 {
+    public delegate void CheckGameOver();
     public class GameModel
     {
         readonly List<Enemy> enemies;
         public readonly List<Spell> activeSpells;
-
         public Icon Icon;
         readonly int widthForm;
         readonly int heightForm;
@@ -20,6 +20,10 @@ namespace MagicWorld
         public Timer TimerClearSpells;
         public Castle Castle;
 
+        public event CheckGameOver GameOverEvent;
+
+        public GameOver gameOver { get; set; }
+
         public Hero Player;
         public Map Map;
 
@@ -27,17 +31,25 @@ namespace MagicWorld
         {
             TimerSpawn = new Timer { Interval = 3000 };
             TimerSpawn.Tick += SpawnEnemy;
-
             TimerMove = new Timer { Interval = 20 };
             TimerMove.Tick += MovePlayer;
             TimerMove.Tick += MoveEnemies;
             TimerMove.Tick += MoveAndHitSpells;
+            TimerMove.Tick += CheckGameOver;
+
+
 
             TimerClearEnemies = new Timer { Interval = 3000 };
             TimerClearEnemies.Tick += ClearEnemies;
 
             TimerClearSpells = new Timer { Interval = 500 };
             TimerClearSpells.Tick += ClearSpells;
+
+            GameOverEvent += () =>
+            {
+                gameOver.Show();
+                StopGame();
+            };
 
             enemies = new List<Enemy>();
             activeSpells = new List<Spell>();
@@ -49,6 +61,16 @@ namespace MagicWorld
             widthForm = MapsInfo.CellSize * Map.Width;
             heightForm = MapsInfo.CellSize * Map.Height;
             Icon = new Icon(Map.Width, Map.Height);
+        }
+
+        public void StopGame()
+        {
+            TimerSpawn.Stop();
+            TimerMove.Stop();
+            TimerClearSpells.Stop();
+            TimerClearEnemies.Stop();
+
+            Controller = null;
         }
 
         public void Start()
@@ -68,11 +90,9 @@ namespace MagicWorld
                     || spell.isExplore)
                 {
                     activeSpells.RemoveAt(i);
-
                     i--;
                 }
             }
-
         }
 
         private void ClearEnemies(object sender, EventArgs e)
@@ -111,6 +131,13 @@ namespace MagicWorld
                 new Rectangle(new Point(Icon.Size.Width * (int)Icon.currentElement, 0), Icon.Size), GraphicsUnit.Pixel);
         }
 
+        public void CheckGameOver(object sender, EventArgs e)
+        {
+            if (Castle.isDestruct || Player.IsDead)
+                GameOverEvent.Invoke();
+        }
+
+
         private void MoveAndHitSpells(object sender, EventArgs e)
         {
             foreach (var spell in activeSpells)
@@ -137,8 +164,7 @@ namespace MagicWorld
             }
         }
 
-        void EnemyAttackCastle(int damage) => Castle.TakeDamage(damage);
-        void EnemyAttackPlayer(int damage) => Player.TakeDamage(damage);
+
 
         private void MoveEnemies(object sender, EventArgs e)
         {
@@ -158,26 +184,26 @@ namespace MagicWorld
         private void SpawnEnemy(object sender, EventArgs e)
         {
             var random = new Random();
-            for (var i = 0; i < 2; i++)
+            for (var i = 0; i < 6; i++)
             {
                 var enemy = new Slime(widthForm + 50, random.Next(100, 950));
-                enemy.AttackingPlayer += EnemyAttackPlayer;
-                enemy.AttackingCastle += EnemyAttackCastle;
+                enemy.AttackingPlayer += Player.TakeDamage;
+                enemy.AttackingCastle += Castle.TakeDamage;
                 enemies.Add(enemy);
             }
             if (random.Next() % 8 == 0)
             {
-                var enemy1 = new Slime(random.Next(700) + 500, -5);
-                enemy1.AttackingPlayer += EnemyAttackPlayer;
-                enemy1.AttackingCastle += EnemyAttackCastle;
-                enemies.Add(enemy1);
+                var enemy = new Slime(random.Next(700) + 500, -5);
+                enemy.AttackingPlayer += Player.TakeDamage;
+                enemy.AttackingCastle += Castle.TakeDamage;
+                enemies.Add(enemy);
             }
             if (random.Next() % 8 == 0)
             {
-                var enemy2 = new Slime(random.Next(700) + 500, heightForm + 5);
-                enemy2.AttackingPlayer += EnemyAttackPlayer;
-                enemy2.AttackingCastle += EnemyAttackCastle;
-                enemies.Add(enemy2);
+                var enemy = new Slime(random.Next(700) + 500, heightForm + 5);
+                enemy.AttackingPlayer += Player.TakeDamage;
+                enemy.AttackingCastle += Castle.TakeDamage;
+                enemies.Add(enemy);
             }
         }
     }
